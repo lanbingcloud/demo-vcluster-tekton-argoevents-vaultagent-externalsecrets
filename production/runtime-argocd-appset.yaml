@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: runtime-argocd-appset
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - runtime: pipeline1-runtime-argocd
+        clusterURL: https://192.168.0.184:31543
+  template:
+    metadata:
+      name: '{{runtime}}'
+      namespace: argocd
+    spec:
+      project: demo-vcluster
+      source:
+        repoURL: https://github.com/lanbingcloud/demo-vcluster-tekton-argoevents-vaultagent-externalsecrets.git
+        targetRevision: HEAD
+        path: argocd/overlays/production
+      destination:
+        server: '{{clusterURL}}'
+        namespace: argocd
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true

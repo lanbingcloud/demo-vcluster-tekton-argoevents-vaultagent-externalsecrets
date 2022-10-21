@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: demo-vcluster
+  source:
+    chart: vault
+    repoURL: https://helm.releases.hashicorp.com/
+    targetRevision: 0.20.1
+    helm:
+      values: |-
+        global:
+          enabled: false
+        injector:
+          enabled: true
+          authPath: auth/host-cluster
+          externalVaultAddr: http://192.168.0.184:31820
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
+  ignoreDifferences:
+  - group: "admissionregistration.k8s.io"
+    kind: "MutatingWebhookConfiguration"
+    jsonPointers:
+    - /webhooks/0/clientConfig/caBundle
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true

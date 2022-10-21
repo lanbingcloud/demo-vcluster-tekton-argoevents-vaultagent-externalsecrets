@@ -1,0 +1,1 @@
+kubectl patch service argocd-server -n argocd -p '{"metadata":{"annotations":{"traefik.ingress.kubernetes.io/service.serverstransport":"traefik-default@kubernetescrd"}}}'

@@ -1,0 +1,22 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: root-issuer
+  namespace: cert-manager
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: cert-manager-secretstore
+    kind: SecretStore
+  target:
+    name: root-issuer
+  data:
+  - secretKey: tls.crt
+    remoteRef:
+      key: root
+      property: tls.crt
+  - secretKey: tls.key
+    remoteRef:
+      key: root
+      property: tls.key
+  

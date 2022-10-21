@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- pipeline1-project.yaml
+- pipeline1-app.yaml
+namespace: argocd

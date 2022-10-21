@@ -1,0 +1,1 @@
+kubectl get sa -n vault vault-auth -o jsonpath="{.secrets[0].name}"|xargs kubectl get secret -n vault -o jsonpath="{.data.token}"|base64 -d

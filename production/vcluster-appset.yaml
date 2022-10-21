@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: vcluster-appset
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: vcluster1
+  template:
+    metadata:
+      name: '{{cluster}}'
+    spec:
+      project: demo-vcluster
+      source:
+        repoURL: https://github.com/lanbingcloud/demo-vcluster-tekton-argoevents-vaultagent-externalsecrets.git
+        targetRevision: HEAD
+        path: vclusters/{{cluster}}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true

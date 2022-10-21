@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vcluster1-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: demo-vcluster
+  source:
+    chart: vcluster
+    repoURL: https://charts.loft.sh
+    targetRevision: 0.10.1
+    helm:
+      values: |-
+        vcluster:
+          image: rancher/k3s:v1.21.13-k3s1
+        syncer:
+          extraArgs:
+          - --tls-san=192.168.0.184
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vcluster1
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
